@@ -1,4 +1,4 @@
-package com.spascoding.englishstructureconfig.domain.repository
+package com.spascoding.englishstructureconfig.data.prividers
 
 import android.content.ContentProvider
 import android.content.ContentValues
