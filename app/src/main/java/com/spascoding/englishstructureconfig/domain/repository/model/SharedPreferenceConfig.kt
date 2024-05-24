@@ -40,21 +40,21 @@ object SharedPreferenceConfig {
     }
 
     fun syncFirebase(
-        context: Context,
-        getMap: (MutableMap<String, String>) -> Unit
+        getConfiguration: (List<ConfigItem>) -> Unit
     ) {
         val remoteConfig = Firebase.remoteConfig
         remoteConfig.fetchAndActivate().addOnCompleteListener { task ->
-            if (clear(context)) {
-                val map: MutableMap<String, String> = mutableMapOf()
-                remoteConfig.all.forEach { entry ->
-                    if (getSelectedPrefs(context).edit().putString(entry.key, entry.value.asString()).commit()) {
-                        map[entry.key] = entry.value.asString()
-                    }
-                }
-                getMap.invoke(map)
+            val list: MutableList<ConfigItem> = mutableListOf()
+            remoteConfig.all.forEach { entry ->
+                list.add(
+                    ConfigItem(
+                        config = "main",
+                        parameter = entry.key,
+                        value = entry.value.asString(),
+                    )
+                )
             }
+            getConfiguration.invoke(list)
         }
     }
-
 }

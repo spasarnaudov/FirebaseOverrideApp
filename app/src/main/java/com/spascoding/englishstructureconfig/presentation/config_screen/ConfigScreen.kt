@@ -12,6 +12,8 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -27,6 +29,8 @@ import com.spascoding.englishstructureconfig.presentation.components.CustomDialo
 fun ConfigScreen(
     viewModel: ConfigScreenViewModel = hiltViewModel()
 ) {
+    val configuration by viewModel.getConfiguration().collectAsState(initial = emptyList())
+
     val showDialog = remember { mutableStateOf(false) }
     val rememberParameter = remember { mutableStateOf("") }
     val rememberValue = remember { mutableStateOf("") }
@@ -58,7 +62,7 @@ fun ConfigScreen(
             modifier = Modifier
                 .fillMaxSize()
         ) {
-            viewModel.state.value.config.forEach { (parameter, value) ->
+            configuration.forEach { (config, parameter, value) ->
                 item {
                     BorderedListElement(
                         onClickItem = {
