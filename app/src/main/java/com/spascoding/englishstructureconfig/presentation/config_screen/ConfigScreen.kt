@@ -22,6 +22,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.spascoding.englishstructureconfig.constants.Padding
+import com.spascoding.englishstructureconfig.domain.repository.model.ConfigItem
 import com.spascoding.englishstructureconfig.presentation.components.BorderedListElement
 import com.spascoding.englishstructureconfig.presentation.components.CustomDialog
 
@@ -29,22 +30,21 @@ import com.spascoding.englishstructureconfig.presentation.components.CustomDialo
 fun ConfigScreen(
     viewModel: ConfigScreenViewModel = hiltViewModel()
 ) {
-    val configuration by viewModel.getConfiguration().collectAsState(initial = emptyList())
+    val configItems by viewModel.getConfiguration().collectAsState(initial = emptyList())
 
     val showDialog = remember { mutableStateOf(false) }
-    val rememberParameter = remember { mutableStateOf("") }
-    val rememberValue = remember { mutableStateOf("") }
+    val configItemTemp = remember { mutableStateOf(ConfigItem("", "", "")) }
 
     if (showDialog.value)
         CustomDialog(
-            parameter = rememberParameter.value,
-            value = rememberValue.value,
+            parameter = configItemTemp.value.parameter,
+            value = configItemTemp.value.value,
             setShowDialog = {
                 showDialog.value = it
             }
         ) {
             if (it.isNotBlank()) {
-                viewModel.setConfig(rememberParameter.value, it)
+                viewModel.setParameter(configItemTemp.value.copy(value = it))
             }
         }
 
@@ -62,13 +62,12 @@ fun ConfigScreen(
             modifier = Modifier
                 .fillMaxSize()
         ) {
-            configuration.forEach { (config, parameter, value) ->
+            configItems.forEach { configItem ->
                 item {
                     BorderedListElement(
                         onClickItem = {
                             showDialog.value = true
-                            rememberParameter.value = parameter
-                            rememberValue.value = value
+                            configItemTemp.value = configItem
                         }
                     ) {
                         Column(
@@ -76,7 +75,7 @@ fun ConfigScreen(
                         ) {
                             Text(
                                 modifier = Modifier.padding(start = Padding.SMALL),
-                                text = parameter,
+                                text = configItem.parameter,
                                 fontWeight = FontWeight.Bold,
                             )
                             Row(
@@ -87,7 +86,7 @@ fun ConfigScreen(
                                     modifier = Modifier
                                         .weight(1f)
                                         .padding(start = Padding.SMALL),
-                                    text = value,
+                                    text = configItem.value,
                                 )
                                 Icon(
                                     modifier = Modifier,

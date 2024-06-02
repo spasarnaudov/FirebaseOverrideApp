@@ -4,7 +4,10 @@ import android.app.Application
 import android.content.Context
 import androidx.room.Room
 import com.spascoding.englishstructureconfig.data.local.ConfigDatabase
+import com.spascoding.englishstructureconfig.domain.use_case.database.ConfigurationUseCases
 import com.spascoding.englishstructureconfig.domain.use_case.database.GetConfigurationUseCase
+import com.spascoding.englishstructureconfig.domain.use_case.database.UpdateConfigurationFromFirebaseUseCase
+import com.spascoding.englishstructureconfig.domain.use_case.database.UpsertConfigurationUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -32,7 +35,11 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideConfigurationUseCase(configDatabase: ConfigDatabase): GetConfigurationUseCase {
-        return GetConfigurationUseCase(configDatabase)
+    fun provideConfigurationUseCase(configDatabase: ConfigDatabase): ConfigurationUseCases {
+        return ConfigurationUseCases(
+            getConfigurationUseCase = GetConfigurationUseCase(configDatabase),
+            updateConfigurationFromFirebaseUseCase = UpdateConfigurationFromFirebaseUseCase(configDatabase),
+            upsertConfigurationUseCase = UpsertConfigurationUseCase(configDatabase),
+        )
     }
 }
