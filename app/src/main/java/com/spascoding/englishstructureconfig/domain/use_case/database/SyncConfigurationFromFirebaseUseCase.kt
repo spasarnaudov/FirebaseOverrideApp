@@ -10,19 +10,20 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class UpdateConfigurationFromFirebaseUseCase @Inject constructor(
+class SyncConfigurationFromFirebaseUseCase @Inject constructor(
     private val repository: ConfigDatabase
 ) {
     @OptIn(DelicateCoroutinesApi::class)
-    operator fun invoke(config: String) {
+    operator fun invoke() {
         GlobalScope.launch(Dispatchers.IO) {
+            val selectedConfig = repository.dao.getSelectedConfig() ?: return@launch
             val remoteConfig = Firebase.remoteConfig
             remoteConfig.fetchAndActivate().addOnCompleteListener { task ->
                 val list: MutableList<ConfigItem> = mutableListOf()
                 remoteConfig.all.forEach { entry ->
                     list.add(
                         ConfigItem(
-                            config = config,
+                            config = selectedConfig.config,
                             parameter = entry.key,
                             value = entry.value.asString(),
                         )

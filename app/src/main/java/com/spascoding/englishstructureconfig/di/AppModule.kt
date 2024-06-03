@@ -6,7 +6,8 @@ import androidx.room.Room
 import com.spascoding.englishstructureconfig.data.local.ConfigDatabase
 import com.spascoding.englishstructureconfig.domain.use_case.database.ConfigurationUseCases
 import com.spascoding.englishstructureconfig.domain.use_case.database.GetConfigurationUseCase
-import com.spascoding.englishstructureconfig.domain.use_case.database.UpdateConfigurationFromFirebaseUseCase
+import com.spascoding.englishstructureconfig.domain.use_case.database.SelectConfigurationUseCase
+import com.spascoding.englishstructureconfig.domain.use_case.database.SyncConfigurationFromFirebaseUseCase
 import com.spascoding.englishstructureconfig.domain.use_case.database.UpsertConfigurationUseCase
 import dagger.Module
 import dagger.Provides
@@ -38,8 +39,9 @@ object AppModule {
     fun provideConfigurationUseCase(configDatabase: ConfigDatabase): ConfigurationUseCases {
         return ConfigurationUseCases(
             getConfigurationUseCase = GetConfigurationUseCase(configDatabase),
-            updateConfigurationFromFirebaseUseCase = UpdateConfigurationFromFirebaseUseCase(configDatabase),
+            syncConfigurationFromFirebaseUseCase = SyncConfigurationFromFirebaseUseCase(configDatabase),
             upsertConfigurationUseCase = UpsertConfigurationUseCase(configDatabase),
+            selectConfigurationUseCase = SelectConfigurationUseCase(configDatabase),
         )
     }
 }

@@ -9,8 +9,8 @@ class GetConfigurationUseCase @Inject constructor(
     private val repository: ConfigDatabase
 ) {
 
-    operator fun invoke(config: String): Flow<List<ConfigItem>> {
-        return repository.dao.getConfiguration(config)
+    operator fun invoke(): Flow<List<ConfigItem>> {
+        return repository.dao.getConfiguration()
     }
 
 }

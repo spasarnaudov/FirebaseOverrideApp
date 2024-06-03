@@ -33,7 +33,7 @@ class ConfigProvider : ContentProvider() {
         p3: Array<out String>?,
         p4: String?
     ): Cursor {
-        return database.dao.getConfigurationSync("main").toCursor()
+        return database.dao.getConfigurationSync().toCursor()
     }
 
     private fun List<ConfigItem>.toCursor(): MatrixCursor {
