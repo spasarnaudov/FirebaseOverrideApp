@@ -42,6 +42,7 @@ import com.spascoding.englishstructureconfig.domain.repository.model.SelectedCon
 import com.spascoding.englishstructureconfig.presentation.components.BorderedListElement
 import com.spascoding.englishstructureconfig.presentation.components.ConfirmDialog
 import com.spascoding.englishstructureconfig.presentation.components.CustomDialog
+import com.spascoding.englishstructureconfig.presentation.components.InputDialog
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -119,7 +120,20 @@ fun ConfigActions(
     val removeConfigurationDialog = remember { mutableStateOf(false) }
     val resetConfigurationDialog = remember { mutableStateOf(false) }
 
+    if (addConfigurationDialog.value) {
+        mDisplayMenu = false
+        InputDialog(
+            title = "Enter configuration name",
+            setShowDialog = {
+                addConfigurationDialog.value = it
+            }
+        ) {
+            viewModel.selectConfiguration(it)
+        }
+    }
+
     if (resetConfigurationDialog.value) {
+        mDisplayMenu = false
         ConfirmDialog(
             text = "Do you want to reset configuration?",
             setShowDialog = {
@@ -152,7 +166,6 @@ fun ConfigActions(
             text = { Text("Reset configuration") },
             onClick = {
                 resetConfigurationDialog.value = true
-                mDisplayMenu = false
             },
             trailingIcon = { Icons.Default.Refresh }
         )
