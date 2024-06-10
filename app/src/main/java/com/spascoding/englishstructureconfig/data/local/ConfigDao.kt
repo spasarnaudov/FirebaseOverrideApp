@@ -35,4 +35,10 @@ interface ConfigDao {
 
     @Query("SELECT * FROM selected_config WHERE id = 1")
     suspend fun getSelectedConfig(): SelectedConfig?
+
+    @Query("SELECT * FROM selected_config WHERE id = 1")
+    fun getSelectedConfigFlow(): Flow<SelectedConfig>
+
+    @Query("SELECT DISTINCT config FROM config_items")
+    fun getAllConfigConfigNames(): Flow<List<String>>
 }

@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.MoreVert
@@ -33,12 +34,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.spascoding.englishstructureconfig.R
 import com.spascoding.englishstructureconfig.constants.Padding
 import com.spascoding.englishstructureconfig.domain.repository.model.ConfigItem
+import com.spascoding.englishstructureconfig.domain.repository.model.SelectedConfig
 import com.spascoding.englishstructureconfig.presentation.components.BorderedListElement
 import com.spascoding.englishstructureconfig.presentation.components.ConfirmDialog
 import com.spascoding.englishstructureconfig.presentation.components.CustomDialog
@@ -46,6 +46,72 @@ import com.spascoding.englishstructureconfig.presentation.components.CustomDialo
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ConfigScreen(
+    viewModel: ConfigScreenViewModel = hiltViewModel()
+) {
+    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
+    Scaffold(
+        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+        topBar = {
+            TopAppBar(
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = Color.Transparent,
+                    titleContentColor = MaterialTheme.colorScheme.onBackground,
+                ),
+                title = {
+                    ConfigSelector()
+                },
+                actions = {
+                    ConfigActions()
+                },
+                scrollBehavior = scrollBehavior,
+            )
+        },
+    ) { innerPadding ->
+        ParametersList(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+        )
+    }
+}
+
+@Composable
+fun ConfigSelector(
+    viewModel: ConfigScreenViewModel = hiltViewModel()
+) {
+    var mDisplayMenu by remember { mutableStateOf(false) }
+    val configNames by viewModel.getAllConfigNamesUseCase().collectAsState(initial = emptyList())
+
+    Row(
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        IconButton(onClick = { mDisplayMenu = !mDisplayMenu }) {
+            Icon(Icons.Default.ArrowDropDown, "")
+        }
+        Text(
+            text = viewModel.getConfigurationFlow()
+                .collectAsState(SelectedConfig(config = "")).value.config,
+        )
+    }
+
+    DropdownMenu(
+        expanded = mDisplayMenu,
+        onDismissRequest = { mDisplayMenu = false }
+    ) {
+        configNames.forEach {
+            DropdownMenuItem(
+                text = { Text(it) },
+                onClick = {
+                    mDisplayMenu = false
+                    viewModel.selectConfiguration(it)
+                },
+            )
+        }
+    }
+}
+
+@Composable
+fun ConfigActions(
     viewModel: ConfigScreenViewModel = hiltViewModel()
 ) {
     var mDisplayMenu by remember { mutableStateOf(false) }
@@ -64,58 +130,31 @@ fun ConfigScreen(
         }
     }
 
-    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
-    Scaffold(
-        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-        topBar = {
-            TopAppBar(
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color.Transparent,
-                    titleContentColor = MaterialTheme.colorScheme.onBackground,
-                ),
-                title = {
-                    Text(
-                        stringResource(R.string.app_name),
-                    )
-                },
-                actions = {
-                    // Creating Icon button for dropdown menu
-                    IconButton(onClick = { mDisplayMenu = !mDisplayMenu }) {
-                        Icon(Icons.Default.MoreVert, "")
-                    }
+    IconButton(onClick = { mDisplayMenu = !mDisplayMenu }) {
+        Icon(Icons.Default.MoreVert, "")
+    }
 
-                    DropdownMenu(
-                        expanded = mDisplayMenu,
-                        onDismissRequest = { mDisplayMenu = false }
-                    ) {
-                        DropdownMenuItem(
-                            text = { Text("Add configuration") },
-                            onClick = { addConfigurationDialog.value = true },
-                            trailingIcon = { Icons.Default.Add }
-                        )
-                        DropdownMenuItem(
-                            text = { Text("Remove configuration") },
-                            onClick = { removeConfigurationDialog.value = true },
-                            trailingIcon = { Icons.Default.Delete }
-                        )
-                        DropdownMenuItem(
-                            text = { Text("Reset configuration") },
-                            onClick = {
-                                resetConfigurationDialog.value = true
-                                mDisplayMenu = false
-                            },
-                            trailingIcon = { Icons.Default.Refresh }
-                        )
-                    }
-                },
-                scrollBehavior = scrollBehavior,
-            )
-        },
-    ) { innerPadding ->
-        ParametersList(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
+    DropdownMenu(
+        expanded = mDisplayMenu,
+        onDismissRequest = { mDisplayMenu = false }
+    ) {
+        DropdownMenuItem(
+            text = { Text("Add configuration") },
+            onClick = { addConfigurationDialog.value = true },
+            trailingIcon = { Icons.Default.Add }
+        )
+        DropdownMenuItem(
+            text = { Text("Remove configuration") },
+            onClick = { removeConfigurationDialog.value = true },
+            trailingIcon = { Icons.Default.Delete }
+        )
+        DropdownMenuItem(
+            text = { Text("Reset configuration") },
+            onClick = {
+                resetConfigurationDialog.value = true
+                mDisplayMenu = false
+            },
+            trailingIcon = { Icons.Default.Refresh }
         )
     }
 }

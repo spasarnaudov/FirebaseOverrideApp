@@ -5,4 +5,6 @@ data class ConfigurationUseCases(
     val syncConfigurationFromFirebaseUseCase: SyncConfigurationFromFirebaseUseCase,
     val upsertConfigurationUseCase: UpsertConfigurationUseCase,
     val selectConfigurationUseCase: SelectConfigurationUseCase,
+    val getSelectedConfigurationUseCase: GetSelectedConfigurationUseCase,
+    val getAllConfigNamesUseCase: GetAllConfigNamesUseCase,
 )

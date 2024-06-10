@@ -13,10 +13,6 @@ class ConfigScreenViewModel @Inject constructor(
     private val configurationUseCases: ConfigurationUseCases,
 ) : ViewModel() {
 
-    init {
-        configurationUseCases.selectConfigurationUseCase.invoke(SelectedConfig(config = "main"))
-    }
-
     fun syncFirebase() {
         configurationUseCases.syncConfigurationFromFirebaseUseCase.invoke()
     }
@@ -27,6 +23,18 @@ class ConfigScreenViewModel @Inject constructor(
 
     fun getConfiguration(): Flow<List<ConfigItem>> {
         return configurationUseCases.getConfigurationUseCase.invoke()
+    }
+
+    fun getConfigurationFlow(): Flow<SelectedConfig> {
+        return configurationUseCases.getSelectedConfigurationUseCase.invoke()
+    }
+
+    fun getAllConfigNamesUseCase(): Flow<List<String>> {
+        return configurationUseCases.getAllConfigNamesUseCase.invoke()
+    }
+
+    fun selectConfiguration(name: String) {
+        configurationUseCases.selectConfigurationUseCase.invoke(SelectedConfig(config = name))
     }
 
 }

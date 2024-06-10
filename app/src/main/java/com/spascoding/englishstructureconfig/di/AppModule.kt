@@ -5,7 +5,9 @@ import android.content.Context
 import androidx.room.Room
 import com.spascoding.englishstructureconfig.data.local.ConfigDatabase
 import com.spascoding.englishstructureconfig.domain.use_case.database.ConfigurationUseCases
+import com.spascoding.englishstructureconfig.domain.use_case.database.GetAllConfigNamesUseCase
 import com.spascoding.englishstructureconfig.domain.use_case.database.GetConfigurationUseCase
+import com.spascoding.englishstructureconfig.domain.use_case.database.GetSelectedConfigurationUseCase
 import com.spascoding.englishstructureconfig.domain.use_case.database.SelectConfigurationUseCase
 import com.spascoding.englishstructureconfig.domain.use_case.database.SyncConfigurationFromFirebaseUseCase
 import com.spascoding.englishstructureconfig.domain.use_case.database.UpsertConfigurationUseCase
@@ -42,6 +44,8 @@ object AppModule {
             syncConfigurationFromFirebaseUseCase = SyncConfigurationFromFirebaseUseCase(configDatabase),
             upsertConfigurationUseCase = UpsertConfigurationUseCase(configDatabase),
             selectConfigurationUseCase = SelectConfigurationUseCase(configDatabase),
+            getSelectedConfigurationUseCase = GetSelectedConfigurationUseCase(configDatabase),
+            getAllConfigNamesUseCase = GetAllConfigNamesUseCase(configDatabase),
         )
     }
 }
