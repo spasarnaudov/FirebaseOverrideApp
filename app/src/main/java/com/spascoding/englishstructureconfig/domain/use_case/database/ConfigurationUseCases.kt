@@ -7,4 +7,5 @@ data class ConfigurationUseCases(
     val selectConfigurationUseCase: SelectConfigurationUseCase,
     val getSelectedConfigurationUseCase: GetSelectedConfigurationUseCase,
     val getAllConfigNamesUseCase: GetAllConfigNamesUseCase,
+    val deleteSelectedConfigurationUseCase: DeleteConfigurationUseCase,
 )

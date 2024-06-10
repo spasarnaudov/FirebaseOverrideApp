@@ -5,6 +5,7 @@ import android.content.Context
 import androidx.room.Room
 import com.spascoding.englishstructureconfig.data.local.ConfigDatabase
 import com.spascoding.englishstructureconfig.domain.use_case.database.ConfigurationUseCases
+import com.spascoding.englishstructureconfig.domain.use_case.database.DeleteConfigurationUseCase
 import com.spascoding.englishstructureconfig.domain.use_case.database.GetAllConfigNamesUseCase
 import com.spascoding.englishstructureconfig.domain.use_case.database.GetConfigurationUseCase
 import com.spascoding.englishstructureconfig.domain.use_case.database.GetSelectedConfigurationUseCase
@@ -46,6 +47,7 @@ object AppModule {
             selectConfigurationUseCase = SelectConfigurationUseCase(configDatabase),
             getSelectedConfigurationUseCase = GetSelectedConfigurationUseCase(configDatabase),
             getAllConfigNamesUseCase = GetAllConfigNamesUseCase(configDatabase),
+            deleteSelectedConfigurationUseCase = DeleteConfigurationUseCase(configDatabase),
         )
     }
 }

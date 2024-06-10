@@ -1,10 +1,10 @@
 package com.spascoding.englishstructureconfig.data.local
 
 import androidx.room.Dao
-import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Transaction
 import androidx.room.Upsert
 import com.spascoding.englishstructureconfig.domain.repository.model.ConfigItem
 import com.spascoding.englishstructureconfig.domain.repository.model.SelectedConfig
@@ -15,8 +15,17 @@ const val GET_PARAMETERS = "SELECT ci.* FROM config_items ci JOIN selected_confi
 @Dao
 interface ConfigDao {
 
-    @Delete
-    suspend fun delete(configItem: ConfigItem)
+    @Query("DELETE FROM config_items WHERE config = (SELECT config FROM selected_config WHERE id = 1)")
+    fun deleteConfigItemsForSelectedConfig()
+
+    @Query("DELETE FROM selected_config WHERE id = 1")
+    fun deleteSelectedConfig()
+
+    @Transaction
+    fun deleteConfigAndSelectedConfig() {
+        deleteConfigItemsForSelectedConfig()
+        deleteSelectedConfig()
+    }
 
     @Upsert
     suspend fun upsert(configItem: ConfigItem)

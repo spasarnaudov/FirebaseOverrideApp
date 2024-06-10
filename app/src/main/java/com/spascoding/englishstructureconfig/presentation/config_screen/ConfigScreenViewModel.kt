@@ -37,4 +37,8 @@ class ConfigScreenViewModel @Inject constructor(
         configurationUseCases.selectConfigurationUseCase.invoke(SelectedConfig(config = name))
     }
 
+    fun deleteConfiguration() {
+        configurationUseCases.deleteSelectedConfigurationUseCase.invoke()
+    }
+
 }

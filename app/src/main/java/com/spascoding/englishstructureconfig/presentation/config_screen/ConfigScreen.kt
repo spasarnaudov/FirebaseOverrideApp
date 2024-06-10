@@ -82,17 +82,21 @@ fun ConfigSelector(
 ) {
     var mDisplayMenu by remember { mutableStateOf(false) }
     val configNames by viewModel.getAllConfigNamesUseCase().collectAsState(initial = emptyList())
+    val configName = viewModel.getConfigurationFlow().collectAsState(null).value?.config
 
     Row(
         verticalAlignment = Alignment.CenterVertically
     ) {
-        IconButton(onClick = { mDisplayMenu = !mDisplayMenu }) {
-            Icon(Icons.Default.ArrowDropDown, "")
+        if (configNames.isNotEmpty()) {
+            IconButton(onClick = { mDisplayMenu = !mDisplayMenu }) {
+                Icon(Icons.Default.ArrowDropDown, "")
+            }
         }
-        Text(
-            text = viewModel.getConfigurationFlow()
-                .collectAsState(SelectedConfig(config = "")).value.config,
-        )
+        if (configName != null) {
+            Text(
+                text = configName,
+            )
+        }
     }
 
     DropdownMenu(
@@ -129,6 +133,18 @@ fun ConfigActions(
             }
         ) {
             viewModel.selectConfiguration(it)
+        }
+    }
+
+    if (removeConfigurationDialog.value) {
+        mDisplayMenu = false
+        ConfirmDialog(
+            text = "Do you want to delete configuration?",
+            setShowDialog = {
+                removeConfigurationDialog.value = it
+            }
+        ) {
+            viewModel.deleteConfiguration()
         }
     }
 
