@@ -13,6 +13,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "EnglishStructureConfig"
+rootProject.name = "LocalConfig"
 include(":app")
  

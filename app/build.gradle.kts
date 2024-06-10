@@ -7,11 +7,11 @@ plugins {
 }
 
 android {
-    namespace = "com.spascoding.englishstructureconfig"
+    namespace = "com.spascoding.localconfig"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.spascoding.englishstructureconfig"
+        applicationId = "com.spascoding.englishstructureconfig" //Change with your firebase project package name and put your 'google-services.json'
         minSdk = 24
         targetSdk = 34
         versionCode = 1
@@ -93,4 +93,6 @@ dependencies {
     annotationProcessor("androidx.room:room-compiler:$room_version")
     kapt("androidx.room:room-compiler:$room_version")
     implementation("androidx.room:room-ktx:$room_version")
+
+    implementation("com.google.code.gson:gson:2.8.8")
 }
